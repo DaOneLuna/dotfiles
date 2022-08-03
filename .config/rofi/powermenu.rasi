@@ -1,0 +1,84 @@
+configuration {
+    font:                           "Iosevka Nerd Font Mono 60";
+    show-icons:                     false;
+    icon-theme:                     "Sweet-Rainbow";
+    drun-display-format:            "{name}";
+    disable-history:                false;
+    sidebar-mode:                   false;
+}
+
+@import "colors.rasi"
+
+window {
+    transparency:                   "real";
+    background-color:               @background;
+    text-color:                     @foreground;
+    border-radius:                  0px;
+    height:                         146px;
+    width:                          501px;
+    location:                       north east;
+    x-offset:                       0;
+    y-offset:                       35;
+    padding:                        20px 20px 0px 20px;
+    margin:                         0% 0% 0% 0%;
+    children:                       [ listview ];
+}
+
+listview {
+    background-color:               @background;
+    margin:                         0% 0% 0% 0%;
+    spacing:                        20px;
+    layout:                         horizontal;
+    width:                          100%;
+}
+
+element {
+    background-color:               @background-alt;
+    text-color:                     @foreground;
+    border-radius:                  5px;
+    height:                         50px;
+    width:                          100px;
+    border:                         2px;
+    border-radius:                  5px;
+    border-color:                   @border;
+    margin:                         0% 0% 0% 0%;
+    padding:                        0% 0% 0% 0%;
+    vertical-align:                 0.5;
+    horizontal-align:               0.5;
+}
+
+element-text {
+    background-color:               #00000000;
+    text-color:                     inherit;
+    font:                           inherit;
+    expand:                         true;
+    horizontal-align:               0.5;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color:               @urgent;
+    text-color:                     @foreground;
+    border-radius:                  5px;
+}
+
+element normal.active,
+element alternate.active {
+    background-color:               @foreground;
+    text-color:                     @background-alt;
+}
+
+element selected {
+    background-color:               @foreground;
+    text-color:                     @background-alt;
+}
+
+element selected.urgent {
+    background-color:               @foreground;
+    text-color:                     @background-alt;
+}
+
+element selected.active {
+    background-color:               @foreground;
+    text-color:                     @background-alt;
+}

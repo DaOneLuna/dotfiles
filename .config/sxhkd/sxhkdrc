@@ -1,0 +1,188 @@
+#
+# wm independent hotkeys
+#
+
+# terminal emulator
+super + Return
+	alacritty
+
+# screen cap 
+shift + Print
+	maim -s | xclip -selection clipboard -t image/png
+
+# screen cap 
+Print
+	maim | xclip -selection clipboard -t image/png
+	
+# program launcher
+super + @space
+	rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/rofi/launcher.rasi
+
+# make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd
+
+# Open File Manager
+super + e
+	pcmanfm --no-desktop -n
+
+XF86AudioRaiseVolume
+    pactl set-sink-volume 0 +5%
+XF86AudioLowerVolume
+    pactl set-sink-volume 0 -5%
+XF86AudioMute
+    pactl set-sink-mute 0 toggle
+XF86AudioStop
+    killall spt
+super + XF86AudioPrev
+    spt pb --seek -10
+XF86AudioPrev
+    spt pb -p
+XF86AudioPlay
+    spt pb -t
+super + XF86AudioNext
+    spt pb --seek +10
+XF86AudioNext
+    spt pb -n
+
+#
+# bspwm hotkeys
+#
+
+# quit/restart bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r}
+
+
+# quit/restart bspwm and clear lock file
+super + alt + shift + {q,r}
+	rm /tmp/bspwm_start_lock.lock; \
+	bspc {quit,wm -r}
+
+# close and kill
+super + {_,shift + }w
+	bspc node -{c,k}
+
+# alternate between the tiled and monocle layout
+super + m
+	bspc desktop -l next
+
+# send the newest marked node to the newest preselected node
+super + y
+	bspc node newest.marked.local -n newest.!automatic.local
+
+# swap the current node and the biggest window
+super + g
+	bspc node -s biggest.window
+
+# start lock screen
+super + shift + x
+	betterlockscreen -l dim --off 30
+
+#
+# state/flags
+#
+
+# set the window state
+super + {t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# set the node flags
+super + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+
+#
+# focus/swap
+#
+
+# focus the node in the given direction
+super + {_,shift + }{Left,Down,Up,Right}
+	bspc node -{f,s} {west,south,north,east}
+
+# focus the node for the given path jump
+super + {p,b,comma,period}
+	bspc node -f @{parent,brother,first,second}
+
+# focus the next/previous window in the current desktop
+super + {_,shift + }c
+	bspc node -f {next,prev}.local.!hidden.window
+
+# focus the next/previous desktop in the current monitor
+super + bracket{left,right}
+	bspc desktop -f {prev,next}.local
+
+# focus the last node/desktop
+super + {grave,Tab}
+	bspc {node,desktop} -f last
+
+# focus the older or newer node in the focus history
+super + {o,i}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+
+# focus or send to the given desktop
+super + 1
+	bspc desktop -f 'Dev'
+super + shift + 1
+	bspc node -d 'Dev'
+super + 2
+	bspc desktop -f 'Dev2'
+super + shift + 2
+	bspc node -d 'Dev2'
+super + 3
+	bspc desktop -f 'Game'
+super + shift + 3
+	bspc node -d 'Game'
+super + 4
+	bspc desktop -f 'Util'
+super + shift + 4
+	bspc node -d 'Util'
+super + 5
+	bspc desktop -f 'HDR'
+super + shift + 5
+	bspc node -d 'HDR'
+super + 6
+	bspc desktop -f 'Side'
+super + shift + 6
+	bspc node -d 'Side'
+super + 7
+	bspc desktop -f 'Mon'
+super + shift + 7
+	bspc node -d 'Mon'
+
+#
+# preselect
+#vst
+
+# preselect the direction
+super + ctrl + {Left,Down,Up,Right}
+	bspc node -p {west,south,north,east}
+
+# preselect the ratio
+super + ctrl + {1-9}
+	bspc node -o 0.{1-9}
+
+# cancel the preselection for the focused node
+super + ctrl + space
+	bspc node -p cancel
+
+# cancel the preselection for the focused desktop
+super + ctrl + shift + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+#
+# move/resize
+#
+
+# expand a window by moving one of its side outward
+super + alt + {Left,Down,Up,Right}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# contract a window by moving one of its side inward
+super + alt + shift + {Left,Down,Up,Right}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# move a floating window
+super + {h,j,k,l}
+	bspc node -v {-20 0,0 20,0 -20,20 0}

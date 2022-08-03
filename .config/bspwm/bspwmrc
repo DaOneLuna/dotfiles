@@ -1,0 +1,54 @@
+#! /bin/sh
+
+# Terminate already running picom
+killall -q picom -v
+# Wait until the processes have been shut down
+while pgrep -u $UID -x picom >/dev/null; do sleep 1; done
+picom -b --experimental-backends
+
+# Terminate already running sxhkd
+killall -q sxhkd -v
+# Wait until the processes have been shut down
+while pgrep -u $UID -x sxhkd >/dev/null; do sleep 1; done
+sxhkd &
+
+#Configure Monitors
+bspc monitor HDMI-0 -d 'Dev' 'Dev2' 'Game' # ASUS Monitor
+bspc monitor DP-0 -d 'Side' #BenQ Monitor
+bspc monitor DP-4 -d 'Util' 'HDR' # LG Monitor
+bspc monitor DP-3 -d 'Mon' # Dell Monitor
+
+#Window borders / gaps
+bspc config border_width         2
+bspc config window_gap           0
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+#Window rules 
+bspc rule -a Java desktop=Dev
+bspc rule -a Eclipse desktop=Dev
+bspc rule -a Steam desktop=Game
+bspc rule -a Pcmanfm desktop=Mon
+bspc rule -a steam_app_405900 state=fullscreen
+
+#Launching Polybar
+$HOME/.config/polybar/launch.sh
+
+nitrogen --restore &
+
+#Only Start programs the first time bspwm is loaded
+lock=/tmp/bspwm_start_lock.lock
+if [ -f "$lock" ]; then
+	echo ""
+else
+	bspc config ignore_ewmh_focus true &
+	sleep 1
+	bspc desktop -f 'Util' && subl &
+	sleep .6
+	bspc desktop -f 'Side' && chromium &
+	sleep 1
+	bspc desktop -f 'Mon' && discord &
+	touch $lock
+	bspc config ignore_ewmh_focus false
+fi
